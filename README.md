@@ -1,5 +1,4 @@
 # APCS A
-## 2018/19 School Year
 
 Contains all the projects for AP Computer Science A over the 2018-19 school year.
  
