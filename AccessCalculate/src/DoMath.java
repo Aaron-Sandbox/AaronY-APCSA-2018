@@ -7,7 +7,7 @@
 public class DoMath {
 	
 	public static void main(String[] args) {
-		System.out.println(Calculate.round2(57.57554));
+		System.out.println(Calculate.quadForm(1, -4, 5));
 	}
 
 }

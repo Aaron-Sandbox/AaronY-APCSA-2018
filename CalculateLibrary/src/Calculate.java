@@ -100,12 +100,11 @@ public class Calculate {
 	
 	//Returns whether the first argument is divisible by the second
 	public static boolean isDivisibleBy(int dividend, int divisor) {
-		try {
-			return dividend % divisor == 0;
-		} catch(ArithmeticException e) {
-			return false;
+		if(divisor == 0){
+			throw new ArithmeticException("Invalid argument");
 		}
-				
+		
+		return dividend % divisor == 0;	
 	}
 	
 	public static double max(double x1, double x2) {
@@ -118,6 +117,11 @@ public class Calculate {
 	}
 	
 	public static int min(int x1, int x2) {
+		if(x1<x2) return x1;
+		return x2;
+	}
+
+	public static double min(double x1, double x2) {
 		if(x1<x2) return x1;
 		return x2;
 	}
@@ -134,6 +138,11 @@ public class Calculate {
 	
 	public static double exponent(double base, int power) {
 		double result = base;
+		
+		if(power < 0){
+			throw new ArithmeticException("Invalid argument");
+		}
+		
 		for(int i = 0; i < power - 1; i++) {
 			result *= base;
 		}
@@ -144,6 +153,8 @@ public class Calculate {
 		
 		if(num == 1) {
 			return 1;
+		} else if(num < 0){
+			throw new ArithmeticException("Invalid argument");
 		}
 		
 		int answer = num*factorial(num-1);
@@ -162,12 +173,42 @@ public class Calculate {
 	
 	public static int gcf(int num1, int num2) {
 		int answer = 1;
-		for(int i = 2; i < num1; i++) {
-			if(isDivisibleBy(num1, i) && isDivisibleBy(num2, i)) {
-				answer =  i;
+		for(int i = 1; i <= num1; i++) {
+			for(int j = 1; j <= num2; j++) {
+				if(isDivisibleBy(num1, i) && isDivisibleBy(num2, i)) {
+					answer =  i;
+				}
 			}
 		}
 		return answer;
+	}
+	
+	public static double sqrt(double num){
+		if(num < 0){
+			throw new ArithmeticException("Invalid argument");
+		}
+		
+		double answer = 1;
+		
+		while(!(absValue(num - answer*answer) < 0.005)){
+			answer = 0.5*(num/answer + answer);
+		}
+		
+		return round2(answer);
+	}
+	
+	public static String quadForm(int a, int b, int c){
+		double discriminant = discriminant(a, b, c);
+		if(discriminant < 0){
+			return "no real roots";
+		} else if(discriminant == 0){
+			return round2(-b/2*a) + "";
+		} else {
+			double root1 = round2((-b+sqrt(discriminant))/(2.0*a));
+			double root2 = round2((-b-sqrt(discriminant))/(2.0*a));
+			
+			return min(root1, root2) + " and " + max(root1, root2);
+		}
 	}
 	
 }
