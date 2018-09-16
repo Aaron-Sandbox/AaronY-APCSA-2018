@@ -189,10 +189,9 @@ public class Calculate {
 	public static int gcf(int num1, int num2) {
 		int answer = 1;
 		for(int i = 1; i <= num1; i++) {
-			for(int j = 1; j <= num2; j++) {
-				if(isDivisibleBy(num1, i) && isDivisibleBy(num2, i)) {
-					answer =  i;
-				}
+			if(isDivisibleBy(num1, i) && isDivisibleBy(num2, i)) {
+				answer =  i;
+
 			}
 		}
 		return answer;
