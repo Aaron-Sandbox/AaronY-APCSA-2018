@@ -1,7 +1,8 @@
 /**
- * Client code for the Calculate Library 
  * @author Aaron Yu
  * @version 9.6.2018
+ * 
+ * Client code that uses the Calculate library
  */
 
 public class DoMath {
