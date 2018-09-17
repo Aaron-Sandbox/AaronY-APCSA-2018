@@ -3,7 +3,7 @@
  * @version 9.17.18
  * 
  * A math library containing various functions emulating those
- * of the Java Math class
+ * of the Java Math class (and more!)
  */
 public class Calculate {
 	
