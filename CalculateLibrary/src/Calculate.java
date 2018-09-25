@@ -114,7 +114,7 @@ public class Calculate {
 	}
 	
 	public static double max(double x1, double x2, double x3) {
-		return max(x1,max(x2, x3));
+		return max(x1, max(x2, x3));
 	}
 	
 	public static int min(int x1, int x2) {
@@ -123,20 +123,38 @@ public class Calculate {
 	}
 	
 	public static double round2(double num) {
-		int answer = (int)(num*1000);
+		
+		if(num == 0) {
+			return 0;
+		}
+		
+		int sign = (int) (num / absValue(num));
+		int answer = absValue((int)(num*1000));
 		if(answer%10>=5) {
-			return ((int)((answer+10)/10))/100.0;
+			return sign*((int)((answer+10)/10))/100.0;
 		}else{
-			return (answer/10)/100.0;
+			return sign*(answer/10)/100.0;
 		}
 		
 	}
 	
 	public static double exponent(double base, int power) {
+		
+		if(power == 0) {
+			return 1;
+		}
+		
+		boolean negativeExponent = power < 0;
+		
 		double result = base;
-		for(int i = 0; i < power - 1; i++) {
+		for(int i = 0; i < absValue(power) - 1; i++) {
 			result *= base;
 		}
+		
+		if(negativeExponent) {
+			result = 1/result;
+		}
+		
 		return result;
 	}
 	
