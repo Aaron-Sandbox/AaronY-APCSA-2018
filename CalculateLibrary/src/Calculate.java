@@ -1,12 +1,18 @@
-
+/**
+ * @author Aaron Yu
+ * @version 9.17.18
+ * 
+ * A math library containing various functions emulating those
+ * of the Java Math class (and more!)
+ */
 public class Calculate {
 	
-	//Returns the square of a number as a signed integer
+	//Returns the square of a number as an integer
 	public static int square(int input) {
 		return input*input;
 	}
 	
-	//Returns the cube of a number as a signed integer
+	//Returns the cube of a number as an integer
 	public static int cube(int input) {
 		return input*input*input;
 	}
@@ -100,28 +106,37 @@ public class Calculate {
 	
 	//Returns whether the first argument is divisible by the second
 	public static boolean isDivisibleBy(int dividend, int divisor) {
-		try {
-			return dividend % divisor == 0;
-		} catch(ArithmeticException e) {
-			return false;
+		if(divisor == 0){
+			throw new ArithmeticException("Invalid argument");
 		}
-				
+		
+		return dividend % divisor == 0;	
 	}
 	
+	//Returns the larger of two doubles
 	public static double max(double x1, double x2) {
 		if(x1 > x2) return x1;
 		return x2;
 	}
 	
+	//Returns the larger of three doubles, overrides max(double, double)
 	public static double max(double x1, double x2, double x3) {
 		return max(x1, max(x2, x3));
 	}
 	
+	//Returns the smaller of two ints
 	public static int min(int x1, int x2) {
 		if(x1<x2) return x1;
 		return x2;
 	}
+
+	//Returns the smaller of two doubles, overrides min(int,int)
+	public static double min(double x1, double x2) {
+		if(x1<x2) return x1;
+		return x2;
+	}
 	
+	//Takes a double, returns it rounded to the hundreths place
 	public static double round2(double num) {
 		
 		if(num == 0) {
@@ -138,6 +153,7 @@ public class Calculate {
 		
 	}
 	
+	//Raises an exponent of type double to a whole number power
 	public static double exponent(double base, int power) {
 		
 		if(power == 0) {
@@ -147,6 +163,7 @@ public class Calculate {
 		boolean negativeExponent = power < 0;
 		
 		double result = base;
+		
 		for(int i = 0; i < absValue(power) - 1; i++) {
 			result *= base;
 		}
@@ -158,10 +175,13 @@ public class Calculate {
 		return result;
 	}
 	
+	//Returns the factorial of an integer
 	public static int factorial(int num) {
 		
 		if(num == 1) {
 			return 1;
+		} else if(num < 0){
+			throw new ArithmeticException("Invalid argument");
 		}
 		
 		int answer = num*factorial(num-1);
@@ -169,6 +189,7 @@ public class Calculate {
 		
 	}
 	
+	//Takes an int, returns true if int is prime, false otherwise
 	public static boolean isPrime(int num) {
 		for(int i = 2; i < num; i++) {
 			if(isDivisibleBy(num, i)) {
@@ -178,14 +199,46 @@ public class Calculate {
 		return true;
 	}
 	
+	//Returns the greatest common factor of two ints
 	public static int gcf(int num1, int num2) {
 		int answer = 1;
-		for(int i = 2; i < num1; i++) {
+		for(int i = 1; i <= num1; i++) {
 			if(isDivisibleBy(num1, i) && isDivisibleBy(num2, i)) {
 				answer =  i;
+
 			}
 		}
 		return answer;
+	}
+	
+	//Returns the square root of a double rounded to the hundreths
+	public static double sqrt(double num){
+		if(num < 0){
+			throw new ArithmeticException("Invalid argument");
+		}
+		
+		double answer = 1;
+		
+		while(!(absValue(num - answer*answer) < 0.005)){
+			answer = 0.5*(num/answer + answer);
+		}
+		
+		return round2(answer);
+	}
+	
+	//Takes the three coefficients of a standard quadratic polynomial and returns the roots
+	public static String quadForm(int a, int b, int c){
+		double discriminant = discriminant(a, b, c);
+		if(discriminant < 0){
+			return "no real roots";
+		} else if(discriminant == 0){
+			return round2(-b/2*a) + "";
+		} else {
+			double root1 = round2((-b+sqrt(discriminant))/(2.0*a));
+			double root2 = round2((-b-sqrt(discriminant))/(2.0*a));
+			
+			return min(root1, root2) + " and " + max(root1, root2);
+		}
 	}
 	
 }
