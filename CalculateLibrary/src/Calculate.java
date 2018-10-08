@@ -53,21 +53,19 @@ public class Calculate {
 	}
 	
 	//Takes a whole number, numerator, and denominator, and converts it to a mixed fraction in the form a/b
-	public static String toImproperFrac(double wholeNum, double numerator, double denominator) {
-		try {
-			return (wholeNum*denominator+numerator) + "/" + denominator;
-		} catch(ArithmeticException e) {
-			return "Illegal arguments";
+	public static String toImproperFrac(int wholeNum, int numerator, int denominator) {
+		if(denominator == 0) {
+			throw new ArithmeticException("/ by 0");
 		}
+		return (wholeNum*denominator+numerator) + "/" + denominator;
 	}
 	
 	//Takes a numerator and denominator and returns it as a mixed fraction in the form a_b/c
 	public static String toMixedNum(int numerator, int denominator) {
-		try {
-			return numerator/denominator + "_" + numerator%denominator+ "/" + denominator; 
-		} catch(ArithmeticException e) {
-			return "Illegal arguments";
+		if(denominator == 0) {
+			throw new ArithmeticException("/ by 0");
 		}
+		return (int)(numerator/denominator) + "_" + (int)(numerator%denominator)+ "/" + (int)(denominator); 
 	}
 	
 	/**
@@ -81,7 +79,7 @@ public class Calculate {
 		bx = a*d + b*c;
 		cx = b*d;
 		
-		return ax + var + "^2" + sign(bx)+ absValue(bx) + var + sign(cx) + absValue(cx);
+		return ax + var + "^2" + " + " + bx + var + " + " + cx;
 	}
 	
 	//The sign method returns a string with the sign of the integer argument
@@ -169,7 +167,8 @@ public class Calculate {
 		}
 		
 		if(negativeExponent) {
-			result = 1/result;
+			//result = 1/result;
+			throw new ArithmeticException("/ by 0");
 		}
 		
 		return result;
@@ -180,7 +179,7 @@ public class Calculate {
 		
 		if(num == 1) {
 			return 1;
-		} else if(num < 0){
+		} else if(num <= 0){
 			throw new ArithmeticException("Invalid argument");
 		}
 		
