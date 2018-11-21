@@ -49,13 +49,32 @@ public class FracCalc {
     	String[] operators = new String[round2(elements.length/2.0 - 0.5)];
     	int curOperator = 1;
     	for(int i = 0; i < operators.length; i++) {
-    		operators[i] = elements[curOperator];
-    		curOperator+=2;
+			operators[i] = elements[curOperator];
+			curOperator += 2;
+		}
+    	//Checkpoint 2
+    	String secondOperand = operands[1];
+    	int wholeNum = 0, numerator = 0, denominator = 1;
+
+    	if(secondOperand.indexOf("_") ==-1) {
+    		if(secondOperand.indexOf("/") !=-1) {
+    			wholeNum = 0;
+    			String[] secondOperandArray = secondOperand.split("/");
+    			numerator = Integer.parseInt(secondOperandArray[0]);
+    			denominator = Integer.parseInt(secondOperandArray[1]);
+    		} else {
+    			wholeNum = Integer.parseInt(secondOperand);
+    		}
+    	} else {
+    		String[] secondOperandArray = secondOperand.split("_");
+    		wholeNum = Integer.parseInt(secondOperandArray[0]);
+
+    		String[] secondOperandArrayTwo = secondOperandArray[1].split("/");
+    		numerator = Integer.parseInt(secondOperandArrayTwo[0]);
+    		denominator = Integer.parseInt(secondOperandArrayTwo[1]);
     	}
-    	 
-    	
-    	//Checkpoint 1
-    	return operands[1];
+
+    	return "whole:" + wholeNum + " numerator:" + numerator + " denominator:" + denominator;
 
     }
     
