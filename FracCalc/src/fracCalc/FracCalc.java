@@ -52,30 +52,13 @@ public class FracCalc {
 			operators[i] = elements[curOperator];
 			curOperator += 2;
 		}
-    	//Checkpoint 2
-    	String secondOperand = operands[1];
-    	int wholeNum = 0, numerator = 0, denominator = 1;
-
-    	if(secondOperand.indexOf("_") ==-1) {
-    		if(secondOperand.indexOf("/") !=-1) {
-    			wholeNum = 0;
-    			String[] secondOperandArray = secondOperand.split("/");
-    			numerator = Integer.parseInt(secondOperandArray[0]);
-    			denominator = Integer.parseInt(secondOperandArray[1]);
-    		} else {
-    			wholeNum = Integer.parseInt(secondOperand);
-    		}
-    	} else {
-    		String[] secondOperandArray = secondOperand.split("_");
-    		wholeNum = Integer.parseInt(secondOperandArray[0]);
-
-    		String[] secondOperandArrayTwo = secondOperandArray[1].split("/");
-    		numerator = Integer.parseInt(secondOperandArrayTwo[0]);
-    		denominator = Integer.parseInt(secondOperandArrayTwo[1]);
+		
+    	int[][] improperOperand = toImproperFraction(operands);
+    	for(int i = 0; i < improperOperand.length; i++) {
+    		System.out.print(Arrays.toString(improperOperand[i])+ " ");
     	}
 
-    	return "whole:" + wholeNum + " numerator:" + numerator + " denominator:" + denominator;
-
+    	return "";
     }
     
     //Converts an array of numbers (fractions, mixed fractions, whole numbers) to improper fraction form
