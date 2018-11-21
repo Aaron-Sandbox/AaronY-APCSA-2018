@@ -20,15 +20,6 @@ public class FracCalc {
     	}
     	
     	sc.close();
-    	
-    	int[] fracOne = {-15, 4};
-    	int[] fracTwo = {-10, 4};
-    	//"-3_3/4 - -2_2/4"
-    	
-    	System.out.println(Arrays.toString(simplify(operate(fracOne, fracTwo, "+"))));
-    	System.out.println(Arrays.toString(simplify(operate(fracOne, fracTwo, "+"))));
-    	System.out.println(Arrays.toString(simplify(operate(fracOne, fracTwo, "+"))));
-    	System.out.println(Arrays.toString(simplify(operate(fracOne, fracTwo, "+"))));
 
     }
     
@@ -36,7 +27,6 @@ public class FracCalc {
     	
     	//Splits the string into all elements by the space string
     	String[] elements = input.split(" ");
-    	System.out.println(Arrays.toString(elements));
     	
     	//Creates an array of strings called operands that will contain the operands without the operators
     	String[] operands = new String[round2(elements.length/2.0 + 0.5)];
@@ -57,9 +47,6 @@ public class FracCalc {
     	//An array of all the operands in improper fraction form
     	//[[numerator_one, denominator_one], [numerator_two, denominator_two], [numerator_three, denominator_three]], etc.
     	int[][] improperOperand = toImproperFraction(operands);
-    	for(int i = 0; i < improperOperand.length; i++) {
-    		System.out.print(Arrays.toString(improperOperand[i])+ " ");
-    	}
     	
     	//Checkpoint 3
     	//Only returns the first two operands after performing the first operation on them
