@@ -36,13 +36,25 @@ public class FracCalc {
     	int curOperand = 0;
     	char[] allowedOperandValues = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_', '/'};
     	for(int i = 0; i < operands.length; i++) {
+    		int countMinus = 0, countUnderscore = 0, countSlash = 0;
     		//Error checking loop, iterates through the string and makes sure all the characters within are allowed as per the allowed characters array
     		for(int j = 0; j < elements[curOperand].length(); j++) {
     			char character = elements[curOperand].charAt(j);
     			if(!contains(allowedOperandValues, character)) {
     				return "ERROR: Input is in an invalid format";
+    			} else if (character == '-'){
+    				countMinus++;
+    			} else if (character == '_'){
+    				countUnderscore++;
+    			} else if (character == '/'){
+    				countSlash++;
     			}
     		}
+    		
+    		if(countMinus > 1 || countUnderscore > 1 || countSlash > 1){
+    			return "ERROR: Input is in an invalid format";
+    		}
+    		
     		//If there are no errors in the string, it will be added to the array of operands
     		operands[i] = elements[curOperand];
     		curOperand+=2;
@@ -66,7 +78,8 @@ public class FracCalc {
 			curOperator += 2;
 		}
     	
-    	if(operators.length < 2){
+    	//Check to fix issues with only a single operator
+    	if(operators.length < 1){
     		return "ERROR: Input is in an invalid format";
     	}
 		
