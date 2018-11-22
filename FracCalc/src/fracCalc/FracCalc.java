@@ -20,6 +20,7 @@ public class FracCalc {
     	}
     	
     	sc.close();
+    	
 
     }
     
@@ -27,32 +28,64 @@ public class FracCalc {
     	
     	//Splits the string into all elements by the space string
     	String[] elements = input.split(" ");
+    	System.out.println(Arrays.toString(elements));
+    	
     	
     	//Creates an array of strings called operands that will contain the operands without the operators
     	String[] operands = new String[round2(elements.length/2.0 + 0.5)];
     	int curOperand = 0;
+    	char[] allowedOperandValues = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_', '/'};
     	for(int i = 0; i < operands.length; i++) {
+    		//Error checking loop, iterates through the string and makes sure all the characters within are allowed as per the allowed characters array
+    		for(int j = 0; j < elements[curOperand].length(); j++) {
+    			char character = elements[curOperand].charAt(j);
+    			if(!contains(allowedOperandValues, character)) {
+    				return "ERROR: Input is in an invalid format";
+    			}
+    		}
+    		//If there are no errors in the string, it will be added to the array of operands
     		operands[i] = elements[curOperand];
     		curOperand+=2;
     	}
     	
+    	
     	//Creates an array of strings called operators that will contain the operators without the operands
     	String[] operators = new String[round2(elements.length/2.0 - 0.5)];
     	int curOperator = 1;
+    	char[] allowedOperatorValues = {'+', '-', '*', '/'};
     	for(int i = 0; i < operators.length; i++) {
+    		//Error checking loop, iterates through the string and makes sure all the characters within are allowed as per the allowed characters array
+    		for(int j = 0; j < elements[curOperator].length(); j++) {
+    			char character = elements[curOperator].charAt(j);
+    			if(!contains(allowedOperatorValues, character) || elements[curOperator].length() > 1) {
+    				return "ERROR: Input is in an invalid format";
+    			}
+    		}
+    		//If there are no errors in the string, it will be added to the array of operators
 			operators[i] = elements[curOperator];
 			curOperator += 2;
 		}
+    	
+    	if(operators.length < 2){
+    		return "ERROR: Input is in an invalid format";
+    	}
 		
     	//An array of all the operands in improper fraction form
     	//[[numerator_one, denominator_one], [numerator_two, denominator_two], [numerator_three, denominator_three]], etc.
     	int[][] improperOperand = toImproperFraction(operands);
+    	for(int i = 0; i < improperOperand.length; i++) {
+    		System.out.print(Arrays.toString(reduce(improperOperand[i]))+ " ");
+    	}
     	
     	//Checkpoint 3
     	//Only returns the first two operands after performing the first operation on them
     	int[] ans = simplify(operate(improperOperand[0], improperOperand[1], operators[0]));
-
-    	return ans[0]+"_"+ans[1]+"/"+ans[2];
+    	
+    	if(ans[2] != 0){
+    		return ans[0]+"_"+ans[1]+"/"+ans[2];
+    	} else {
+    		return "ERROR: Cannot divide by zero";
+    	}
     }
     
     /* 
@@ -83,11 +116,7 @@ public class FracCalc {
     			String[] ndArray = arr[idx].split("/");
     			int numerator = Integer.parseInt(ndArray[0]);
     			int denominator = Integer.parseInt(ndArray[1]);
-    			
-    			//TODO: Divide by 0 error
-    			if(denominator == 0) {
-    				
-    			}
+    		
     			
     			//Adds arrays to an array
     			int[] improperFraction = {wholeNum*denominator+(sign(wholeNum)*numerator), denominator};
@@ -98,19 +127,6 @@ public class FracCalc {
     			
     		//When the number is whole
     		} else if(mixedFraction.indexOf("/") == -1 || mixedFraction.indexOf("_") == -1){
-    			
-    			//Creates an array of allowed characters for error checking
-    			char[] allowedValues = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-'};
-    			
-    			//Checks each character in the operand against the array of allowed values
-    			for(int i = 0; i < mixedFraction.length(); i++) {
-    				char character = mixedFraction.charAt(i);
-    				if(!contains(allowedValues, character)) {
-    					System.out.println("Character is not allowed within array");
-    					//TODO: Character is not allowed within array
-    				}
-    				
-    			}
     			
     			//Parses number (which is whole) to convert to int data type
     			int numerator = Integer.parseInt(mixedFraction);
@@ -132,22 +148,52 @@ public class FracCalc {
     
     //Simplifies improper fractions into mixed fraction form
     public static int[] simplify(int[] improperFraction) {
+    	boolean divByZero = false;
     	int[] simplifiedFraction = new int[3];
+    	int num, denom;
     	
-    	//Gets the whole number by dividing the numerator by the denominator and truncating 
-    	simplifiedFraction[0] = improperFraction[0]/improperFraction[1];
+    	//Checks if there is a divide by zero to avoid throwing an exception
+    	if(improperFraction[1] == 0){
+    		simplifiedFraction[0] = 0; //Sets whole and numerator to 0 to avoid divide by zero error
+    		num = 0;
+    		divByZero = true;
+    	} else {
+    		//Gets the whole number by dividing the numerator by the denominator and truncating 
+    		simplifiedFraction[0] = improperFraction[0]/improperFraction[1];
+    		
+    		//Stores the numerator value in an int within the else to account for divide by zero
+    		num = Math.abs(improperFraction[0]%improperFraction[1]);
+    	}
     	
-    	//Stores the numerator and denominator values in ints
-    	//Stores them as absolute value forms because  -18/4 simplifies to -4_2/4, not -4_-2/4
-    	int num = Math.abs(improperFraction[0]%improperFraction[1]);
-    	int denom = Math.abs(improperFraction[1]);
+    	denom = Math.abs(improperFraction[1]);
     	
     	//Simplifies the new numerator/denominator and places them into an array with the whole number
     	simplifiedFraction[1] = num/gcd(num, denom);
-    	simplifiedFraction[2] = denom/gcd(num, denom);
+    	
+    	//Changes denominator to 0 if there is a divide by zero error to signify that this input is invalid (because we cannot return a String)
+    	if(!divByZero){
+    		simplifiedFraction[2] = denom/gcd(num, denom);
+    	} else {
+    		simplifiedFraction[2] = 0;
+    	}
     	
     	//Returns an array in the form [whole_num, numerator, denominator]
     	return simplifiedFraction;
+    }
+    
+    //Reduces fractions without whole numbers by their greatest common denominator
+    public static int[] reduce(int[] improperFraction) {
+    	int[] reducedFraction = new int[2];
+
+    	int num = improperFraction[0];
+    	int denom = improperFraction[1];
+    	
+    	//Simplifies the new numerator/denominator and places them into an array
+    	reducedFraction[0] = num/gcd(num, denom);
+    	reducedFraction[1] = denom/gcd(num, denom);
+    	
+    	//Returns an array in the form [numerator, denominator]
+    	return reducedFraction;
     }
     
     //Returns the greatest common denominator of two ints
