@@ -20,24 +20,13 @@ public class FracCalc {
     	}
     	
     	sc.close();
-    	
-    	int[] fracOne = {-9035, 1};
-    	int[] fracTwo = {0, 1};
-    	//"-3_3/4 - -2_2/4"
-    	
-    	System.out.println(Arrays.toString(simplify(operate(fracOne, fracTwo, "+"))));
-    	System.out.println(Arrays.toString(simplify(operate(fracOne, fracTwo, "-"))));
-    	System.out.println(Arrays.toString(simplify(operate(fracOne, fracTwo, "*"))));
-    	System.out.println(Arrays.toString(simplify(operate(fracOne, fracTwo, "/"))));
-
+ 
     }
     
     public static String produceAnswer(String input) { 
     	
     	//Splits the string into all elements by the space string
     	String[] elements = input.split(" ");
-    	System.out.println(Arrays.toString(elements));
-    	
     	
     	//Creates an array of strings called operands that will contain the operands without the operators
     	String[] operands = new String[round2(elements.length/2.0 + 0.5)];
@@ -59,7 +48,8 @@ public class FracCalc {
     			}
     		}
     		
-    		if(countMinus > 1 || countUnderscore > 1 || countSlash > 1){
+    		if(countMinus > 1 || countUnderscore > 1 || countSlash > 1
+    				|| (countUnderscore == 1 && countSlash == 0)){
     			return "ERROR: Input is in an invalid format";
     		}
     		
@@ -94,33 +84,31 @@ public class FracCalc {
     	//An array of all the operands in improper fraction form
     	//[[numerator_one, denominator_one], [numerator_two, denominator_two], [numerator_three, denominator_three]], etc.
     	int[][] improperOperand = toImproperFraction(operands);
-    	for(int i = 0; i < improperOperand.length; i++) {
-    		System.out.print(Arrays.toString(reduce(improperOperand[i]))+ " ");
+    	
+    	int[] running_total = operate(improperOperand[0], improperOperand[1], operators[0]);
+    	
+    	for(int i = 2; i < improperOperand.length; i++){
+    		running_total = operate(running_total, improperOperand[i], operators[i-1]);
     	}
     	
-    	//Checkpoint 3
-    	//Only returns the first two operands after performing the first operation on them
-    	int[] ans = simplify(operate(improperOperand[0], improperOperand[1], operators[0]));
+    	
+    	int[] ans = simplify(running_total);
     	
     	if(ans[2] != 0){
 
     		if(ans[1] == 0){ 
-    			//Return only the whole number if the numerator is zero
-    			System.out.println(0 + "");
     			return ans[0] + "";
     		} else if(ans[0] == 0 && ans[1] != 0){ 
-    			//Return the fraction if the whole number is 0
-    			System.out.println(ans[1]+"/"+ans[2]);
     			return ans[1]+"/"+ans[2];
     		} else {
-    			//Otherwise, return the whole fraction
-    			System.out.println(ans[0]+"_"+ans[1]+"/"+ans[2]);
     			return ans[0]+"_"+ans[1]+"/"+ans[2];
     		}
     		
     	} else {
     		return "ERROR: Cannot divide by zero";
     	}
+    	//12457 / -1 + 12457
+    
     }
     
     /* 
@@ -174,8 +162,7 @@ public class FracCalc {
     			//Iterates counter to be adding on to a new position in the array
     			counter++;
     			
-    			//TODO: Error checking for improperly formatted numbers
-    		}
+    		} 
     	}
     	//Returns an array of arrays containing the numerator and denominator
     	return operandImproper;
@@ -183,35 +170,37 @@ public class FracCalc {
     
     //Simplifies improper fractions into mixed fraction form
     public static int[] simplify(int[] improperFraction) {
-    	boolean divByZero = false;
     	int[] simplifiedFraction = new int[3];
     	int num, denom;
     	
     	//Checks if there is a divide by zero to avoid throwing an exception
     	if(improperFraction[1] == 0){
-    		simplifiedFraction[0] = 0; //Sets whole and numerator to 0 to avoid divide by zero error
-    		num = 0;
-    		divByZero = true;
+    		simplifiedFraction[2] = 0;
+    		return simplifiedFraction;
+    		
     	} else {
     		//Gets the whole number by dividing the numerator by the denominator and truncating 
     		simplifiedFraction[0] = improperFraction[0]/improperFraction[1];
+    		if(simplifiedFraction[0] != 0){
+    			num = Math.abs(improperFraction[0]%improperFraction[1]);
+    		} else { 
+    			num = improperFraction[0]%improperFraction[1];
+    		}
+    	
+    		denom = improperFraction[1];
     		
-    		//Stores the numerator value in an int within the else to account for divide by zero
-    		num = Math.abs(improperFraction[0]%improperFraction[1]);
+    		//If denominator is negative and whole number is 0, move negative sign to numerator
+    		if(denom < 0 && simplifiedFraction[0] == 0){
+    			num *= -1;
+    		}
+    		
+    		denom = Math.abs(denom);
+    		
+    		simplifiedFraction[1] = num/gcd(num, denom);
+        	simplifiedFraction[2] = denom/gcd(num, denom);
+    		
     	}
-    	
-    	denom = Math.abs(improperFraction[1]);
-    	
-    	//Simplifies the new numerator/denominator and places them into an array with the whole number
-    	simplifiedFraction[1] = num/gcd(num, denom);
-    	
-    	//Changes denominator to 0 if there is a divide by zero error to signify that this input is invalid (because we cannot return a String)
-    	if(!divByZero){
-    		simplifiedFraction[2] = denom/gcd(num, denom);
-    	} else {
-    		simplifiedFraction[2] = 0;
-    	}
-    	
+
     	//Returns an array in the form [whole_num, numerator, denominator]
     	return simplifiedFraction;
     }
@@ -304,7 +293,7 @@ public class FracCalc {
 	    		fraction[1] = d1;
 	    	}
 	    	
-    	} else if(operation.equals("*") || operation.equals("/")){
+    	} else {
     		if(operation.equals("/")) {
     			int numerator = n2;
     			int denominator = d2;
@@ -316,10 +305,8 @@ public class FracCalc {
     		fraction[0] = n1*n2;
     		fraction[1] = d1*d2;
     		
-    	} else {
-    		//TODO: Operator is not in the correct form
-    	}
-    	
+    	} 
+
     	return fraction;
     }
     
