@@ -21,6 +21,14 @@ public class FracCalc {
     	
     	sc.close();
     	
+    	int[] fracOne = {-9035, 1};
+    	int[] fracTwo = {0, 1};
+    	//"-3_3/4 - -2_2/4"
+    	
+    	System.out.println(Arrays.toString(simplify(operate(fracOne, fracTwo, "+"))));
+    	System.out.println(Arrays.toString(simplify(operate(fracOne, fracTwo, "-"))));
+    	System.out.println(Arrays.toString(simplify(operate(fracOne, fracTwo, "*"))));
+    	System.out.println(Arrays.toString(simplify(operate(fracOne, fracTwo, "/"))));
 
     }
     
@@ -95,7 +103,21 @@ public class FracCalc {
     	int[] ans = simplify(operate(improperOperand[0], improperOperand[1], operators[0]));
     	
     	if(ans[2] != 0){
-    		return ans[0]+"_"+ans[1]+"/"+ans[2];
+
+    		if(ans[1] == 0){ 
+    			//Return only the whole number if the numerator is zero
+    			System.out.println(0 + "");
+    			return ans[0] + "";
+    		} else if(ans[0] == 0 && ans[1] != 0){ 
+    			//Return the fraction if the whole number is 0
+    			System.out.println(ans[1]+"/"+ans[2]);
+    			return ans[1]+"/"+ans[2];
+    		} else {
+    			//Otherwise, return the whole fraction
+    			System.out.println(ans[0]+"_"+ans[1]+"/"+ans[2]);
+    			return ans[0]+"_"+ans[1]+"/"+ans[2];
+    		}
+    		
     	} else {
     		return "ERROR: Cannot divide by zero";
     	}
