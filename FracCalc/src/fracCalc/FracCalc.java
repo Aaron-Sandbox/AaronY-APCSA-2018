@@ -37,15 +37,20 @@ public class FracCalc {
     		//Error checking loop, iterates through the string and makes sure all the characters within are allowed as per the allowed characters array
     		for(int j = 0; j < elements[curOperand].length(); j++) {
     			char character = elements[curOperand].charAt(j);
+    			
     			if(!contains(allowedOperandValues, character)) {
     				return "ERROR: Input is in an invalid format";
+    				
     			} else if (character == '-'){
     				countMinus++;
+    				
     			} else if (character == '_'){
     				countUnderscore++;
+    				
     			} else if (character == '/'){
     				countSlash++;
     			}
+    			
     		}
     		
     		if(countMinus > 1 || countUnderscore > 1 || countSlash > 1
@@ -56,6 +61,7 @@ public class FracCalc {
     		//If there are no errors in the string, it will be added to the array of operands
     		operands[i] = elements[curOperand];
     		curOperand+=2;
+    		
     	}
     	
     	
@@ -85,17 +91,16 @@ public class FracCalc {
     	//[[numerator_one, denominator_one], [numerator_two, denominator_two], [numerator_three, denominator_three]], etc.
     	int[][] improperOperand = toImproperFraction(operands);
     	
+    	//Calculates solution using operate method
     	int[] running_total = operate(improperOperand[0], improperOperand[1], operators[0]);
-    	
     	for(int i = 2; i < improperOperand.length; i++){
     		running_total = operate(running_total, improperOperand[i], operators[i-1]);
     	}
-    	
-    	
+
     	int[] ans = simplify(running_total);
     	
+    	//Changes what is printed based on final calculated values
     	if(ans[2] != 0){
-
     		if(ans[1] == 0){ 
     			return ans[0] + "";
     		} else if(ans[0] == 0 && ans[1] != 0){ 
@@ -103,11 +108,10 @@ public class FracCalc {
     		} else {
     			return ans[0]+"_"+ans[1]+"/"+ans[2];
     		}
-    		
     	} else {
     		return "ERROR: Cannot divide by zero";
     	}
-    	//12457 / -1 + 12457
+    	
     
     }
     
@@ -171,31 +175,32 @@ public class FracCalc {
     //Simplifies improper fractions into mixed fraction form
     public static int[] simplify(int[] improperFraction) {
     	int[] simplifiedFraction = new int[3];
-    	int num, denom;
+    	int whole, num, denom;
     	
-    	//Checks if there is a divide by zero to avoid throwing an exception
+    	//If the denominator is 0, set the new denominator to 0 and return immediately 
     	if(improperFraction[1] == 0){
     		simplifiedFraction[2] = 0;
     		return simplifiedFraction;
     		
-    	} else {
-    		//Gets the whole number by dividing the numerator by the denominator and truncating 
-    		simplifiedFraction[0] = improperFraction[0]/improperFraction[1];
-    		if(simplifiedFraction[0] != 0){
+    	} else { 
+    		//Gets the whole number by dividing the numerator by the denominator and truncating the decimal
+    		whole = improperFraction[0]/improperFraction[1];
+    		
+    		//If the whole number is 0, retain the negative value in the numerator (because 0 cannot be negative)
+    		if(whole != 0){
     			num = Math.abs(improperFraction[0]%improperFraction[1]);
     		} else { 
     			num = improperFraction[0]%improperFraction[1];
     		}
     	
     		denom = improperFraction[1];
-    		
     		//If denominator is negative and whole number is 0, move negative sign to numerator
-    		if(denom < 0 && simplifiedFraction[0] == 0){
+    		if(denom < 0 && whole == 0){
     			num *= -1;
     		}
-    		
     		denom = Math.abs(denom);
     		
+    		simplifiedFraction[0] = whole;
     		simplifiedFraction[1] = num/gcd(num, denom);
         	simplifiedFraction[2] = denom/gcd(num, denom);
     		
@@ -220,6 +225,72 @@ public class FracCalc {
     	return reducedFraction;
     }
     
+    //Operates on two improper fractions based on operator
+    public static int[] operate(int[] operand_one, int[] operand_two, String operation) {
+    	
+    	int fraction[] = new int[2];
+    	int n1 = operand_one[0];
+    	int d1 = operand_one[1];
+    	
+    	int n2 = operand_two[0];
+    	int d2 = operand_two[1];
+    	  	
+    	if(operation.equals("+") || operation.equals("-")) {
+    	
+	    	//If the denominators are different, make them the same
+	    	if(d1 != d2) {
+	    		int denominatorOne = d1;
+	    		int denominatorTwo = d2;
+	    		
+	    		n1 *= denominatorTwo;
+	    		d1 *= denominatorTwo;
+	    		n2 *= denominatorOne;
+	    		d2 *= denominatorOne;
+	    	}
+	    	
+	    	//Adds or subtracts the numerators 
+	    	if(operation.equals("+")) {
+	    		fraction[0] = n1 + n2;
+	    		fraction[1] = d1;
+	    	} else {
+	    		fraction[0] = n1 - n2;
+	    		fraction[1] = d1;
+	    	}
+	    
+    	} else {
+    		//If the operator is divide, flip the second operand and then multiply, else multiply
+    		if(operation.equals("/")) {
+    			int numerator = n2;
+    			int denominator = d2;
+    			
+    			n2 = denominator;
+    			d2 = numerator;
+    		}
+    		
+    		fraction[0] = n1*n2;
+    		fraction[1] = d1*d2;
+    		
+    	} 
+
+    	return fraction;
+    }
+    
+    //Rounds a double to the tenths place
+    public static int round2(double num) {
+    	return (int)(num+0.5);
+    }
+    
+    //Returns whether an element is contained within an array (chars)
+    public static boolean contains(char[] arr, char target) {
+    	for(char curChar : arr) {
+    		if(curChar == target) {
+    			return true;
+    		} 
+    	}
+    	
+    	return false;
+    }
+    
     //Returns the greatest common denominator of two ints
     public static int gcd(int numOne, int numTwo){
     	for(int i = min(Math.abs(numOne), Math.abs(numTwo)); i > 0; i--){
@@ -228,14 +299,6 @@ public class FracCalc {
     		}
     	}
     	return 1;
-    }
-    
-    //Returns the larger of two ints
-    public static int max(int numOne, int numTwo){
-    	if(numOne > numTwo){
-    		return numOne;
-    	}
-    	return numTwo;
     }
     
     //Returns the smaller of two ints
@@ -253,76 +316,5 @@ public class FracCalc {
     	}
     	return 1;
     }
-    
-    
-    //Operates on two improper fractions based on operator
-    public static int[] operate(int[] operand_one, int[] operand_two, String operation) {
-    	
-    	int fraction[] = new int[2];
-    	
-    	int n1 = operand_one[0];
-    	int d1 = operand_one[1];
-    	
-    	int n2 = operand_two[0];
-    	int d2 = operand_two[1];
-    	
-    	
-    	
-    	if(operation.equals("+") || operation.equals("-")) {
-    	
-	    	//Makes the denominator the same by multiplying by 1/1 equivalent
-	    	if(d1 != d2) {
-	    		
-	    		int denominatorOne = d1;
-	    		int denominatorTwo = d2;
-	    		
-	    		n1 *= denominatorTwo;
-	    		d1 *= denominatorTwo;
-	    		n2 *= denominatorOne;
-	    		d2 *= denominatorOne;
-	    		
-	    		
-	    	}
-	    	
-	    	if(operation.equals("+")) {
-	    		fraction[0] = n1 + n2;
-	    		fraction[1] = d1;
-	    		
-	    	} else {
-	    		fraction[0] = n1 - n2;
-	    		fraction[1] = d1;
-	    	}
-	    	
-    	} else {
-    		if(operation.equals("/")) {
-    			int numerator = n2;
-    			int denominator = d2;
-    			
-    			n2 = denominator;
-    			d2 = numerator;
-    		}
-    		
-    		fraction[0] = n1*n2;
-    		fraction[1] = d1*d2;
-    		
-    	} 
-
-    	return fraction;
-    }
-    
-    public static int round2(double num) {
-    	return (int)(num+0.5);
-    }
-    
-    public static boolean contains(char[] arr, char target) {
-    	for(char curChar : arr) {
-    		if(curChar == target) {
-    			return true;
-    		} 
-    	}
-    	
-    	return false;
-    }
-    
     
 }
