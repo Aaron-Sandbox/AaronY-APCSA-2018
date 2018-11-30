@@ -7,14 +7,15 @@ public class FracCalc {
     public static void main(String[] args) {
     	Scanner sc = new Scanner(System.in);
     	
-    	while(true) {
+    	boolean keepRunning = true;
+    	while(keepRunning) {
     		
     		String input = sc.nextLine();
     	
-    		if(input.equals("quit")) {
-    			break;
-    		} else {
+    		if(!input.equals("quit")) {
     			System.out.println(produceAnswer(input));
+    		} else {
+    			keepRunning = false;
     		}
     		
     	}
@@ -90,6 +91,7 @@ public class FracCalc {
     	//An array of all the operands in improper fraction form
     	//[[numerator_one, denominator_one], [numerator_two, denominator_two], [numerator_three, denominator_three]], etc.
     	int[][] improperOperand = toImproperFraction(operands);
+    	//ImproperFraction[] improperOperandTwo = new ImproperFraction[1];
     	
     	//Calculates solution using operate method
     	int[] running_total = operate(improperOperand[0], improperOperand[1], operators[0]);
