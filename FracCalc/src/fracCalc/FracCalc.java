@@ -54,6 +54,7 @@ public class FracCalc {
     			
     		}
     		
+    		//Makes sure input only has the right amount of underscores, slashes
     		if(countMinus > 1 || countUnderscore > 1 || countSlash > 1
     				|| (countUnderscore == 1 && countSlash == 0)){
     			return "ERROR: Input is in an invalid format";
@@ -64,7 +65,6 @@ public class FracCalc {
     		curOperand+=2;
     		
     	}
-    	
     	
     	//Creates an array of strings called operators that will contain the operators without the operands
     	String[] operators = new String[round2(elements.length/2.0 - 0.5)];
@@ -91,17 +91,19 @@ public class FracCalc {
     	//An array of all the operands in improper fraction form
     	//[[numerator_one, denominator_one], [numerator_two, denominator_two], [numerator_three, denominator_three]], etc.
     	int[][] improperOperand = toImproperFraction(operands);
-    	//ImproperFraction[] improperOperandTwo = new ImproperFraction[1];
     	
     	//Calculates solution using operate method
     	int[] running_total = operate(improperOperand[0], improperOperand[1], operators[0]);
     	for(int i = 2; i < improperOperand.length; i++){
     		running_total = operate(running_total, improperOperand[i], operators[i-1]);
     	}
-
+    	
+    	//Simplfies the running total after each iteration to avoid getting extremely large values that may be larger than 2^31-1
     	int[] ans = simplify(running_total);
     	
-    	//Changes what is printed based on final calculated values
+    	/*
+    	 * Changes what is printed based on final output, i.e. if whole is 0 only print the fraction, if numerator is 0 only print the whole, etc
+    	 */
     	if(ans[2] != 0){
     		if(ans[1] == 0){ 
     			return ans[0] + "";
@@ -179,7 +181,7 @@ public class FracCalc {
     	int[] simplifiedFraction = new int[3];
     	int whole, num, denom;
     	
-    	//If the denominator is 0, set the new denominator to 0 and return immediately 
+    	//If the denominator is 0, set the new denominator to 0 and return immediately (signal to the produceAnswer method that the input is invalid)
     	if(improperFraction[1] == 0){
     		simplifiedFraction[2] = 0;
     		return simplifiedFraction;
