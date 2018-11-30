@@ -4,9 +4,14 @@ public class ImproperFraction {
 	
 	public int numerator, denominator;
 	
-	public ImproperFraction(int numerator, int denominator) {
-		this.numerator = numerator;
-		this.denominator = denominator;
+	public ImproperFraction(int numerator, int denominator) {	
+		if(denominator < 0){
+			this.numerator = -numerator;
+			this.denominator = -denominator;
+		} else {
+			this.numerator = numerator;
+			this.denominator = denominator;
+		}
 		
 		
 		if(denominator == 0) {
@@ -44,11 +49,13 @@ public class ImproperFraction {
 	}
 	
 	public MixedFraction toMixedFraction() {
+		
+		
 		int mixedWhole = numerator/denominator;
 		int mixedNumerator = numerator%denominator;
 		
 		if(mixedWhole != 0) {
-			mixedNumerator = Math.abs(numerator);
+			mixedNumerator = Math.abs(mixedNumerator);
 		}
 		
 		int mixedDenominator = denominator;

@@ -4,10 +4,21 @@ public class MixedFraction {
 	
 	public int whole, numerator, denominator;
 	
-	public MixedFraction(int whole, int numerator, int denominator) {
+	public MixedFraction(int whole, int numerator, int denominator) {	
 		this.whole = whole;
-		this.numerator = numerator;
-		this.denominator = denominator;
+		
+		if(denominator < 0){
+			this.numerator = -numerator;
+			this.denominator = -denominator;
+		} else {
+			this.numerator = numerator;
+			this.denominator = denominator;
+		}
+		
+		if(this.numerator < 0){
+			this.numerator = -this.numerator;
+			this.whole = -this.whole;
+		}
 		
 		if(denominator == 0) {
 			throw new IllegalArgumentException("Cannot have a denominator of zero");
