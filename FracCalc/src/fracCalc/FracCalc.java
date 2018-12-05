@@ -6,9 +6,9 @@ public class FracCalc {
 
 	public static void main(String[] args) {
 		//Creates scanner object
-    	Scanner sc = new Scanner(System.in);
+    		Scanner sc = new Scanner(System.in);
 	    
-    	//Asks for input, continues to ask and print the answer until 'quit' is entered
+    		//Asks for input, continues to ask and print the answer until 'quit' is entered
 	   	String input = sc.nextLine();
 	   	while(!input.equals("quit")) {
 	   		//Calls produceAnswer to obtain the answer to the problem and print it out
