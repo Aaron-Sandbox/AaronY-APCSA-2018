@@ -4,6 +4,7 @@ public class ImproperFraction {
 	
 	public int numerator, denominator;
 	
+	//Converts each numerator and denominator combination to the proper signs, throwing an exception if / by 0
 	public ImproperFraction(int numerator, int denominator) {	
 		if(denominator < 0){
 			this.numerator = -numerator;
@@ -19,6 +20,7 @@ public class ImproperFraction {
 		}
 	}
 	
+	//Returns if another object is equal to this one
 	public boolean equals(Object o) {
 		
 		if(o == this) {
@@ -34,20 +36,24 @@ public class ImproperFraction {
 		return false;
 	}
 	
+	//Returns the ImproperFraction as an array of ints
 	public int[] toArray() {
 		int[] fraction = {numerator, denominator};
 		return fraction;
 	}
 	
+	//Returns the ImproperFraction as a String
 	public String toString() {
 		return numerator + "/" + denominator;
 	}
 	
+	//Returns the ImproperFraction simplified
 	public ImproperFraction toSimple() {
 		int gcd = gcd(this.numerator, this.denominator);
 		return new ImproperFraction(this.numerator/gcd, this.denominator/gcd);
 	}
 	
+	//Returns the ImproperFraction as a MixedFraction
 	public MixedFraction toMixedFraction() {
 		
 		int mixedWhole = numerator/denominator;
@@ -67,6 +73,7 @@ public class ImproperFraction {
 		return new MixedFraction(mixedWhole, mixedNumerator, mixedDenominator);
 	}
 	
+	//Converts a string to an object of type ImproperFraction
 	public static ImproperFraction toImproperFraction(String frac) {
 		int wholeNum = 0, idx = 0;
 		if(frac.indexOf("/") != -1) {
@@ -89,6 +96,8 @@ public class ImproperFraction {
 		return new ImproperFraction(0, 0);
 	}
 	
+	//Performs operations on the current ImproperFraction given another operand and an operator
+	//Assumes that the order begins with this instance of ImproperFraction
 	public ImproperFraction operate(ImproperFraction operand, String operator) {
 		ImproperFraction fraction = new ImproperFraction(0, 1);
     	int n1 = this.numerator;
@@ -137,6 +146,7 @@ public class ImproperFraction {
     	return fraction.toSimple();
 	}
 	
+	//Returns the greatest common denominator of two ints
     private static int gcd(int numOne, int numTwo){
     	for(int i = min(Math.abs(numOne), Math.abs(numTwo)); i > 0; i--){
     		if(numOne%i==0 && numTwo%i==0){
@@ -146,6 +156,7 @@ public class ImproperFraction {
     	return 1;
     }
     
+    //Returns the smaller of two ints
     private static int min(int numOne, int numTwo){
     	if(numOne > numTwo){
     		return numTwo;
@@ -153,6 +164,7 @@ public class ImproperFraction {
     	return numOne;
     }
     
+    //Returns the sign of an int as either +-1
     private static int sign(int num){
     	if(num < 0){
     		return -1;

@@ -4,6 +4,7 @@ public class MixedFraction {
 	
 	public int whole, numerator, denominator;
 	
+	//Checks input to make sure MixedFraction is in correct form and is valid
 	public MixedFraction(int whole, int numerator, int denominator) {	
 		this.whole = whole;
 		
@@ -27,6 +28,7 @@ public class MixedFraction {
 		}
 	}
 	
+	//Returns true if the Object argument is equal to this MixedFraction
 	public boolean equals(Object o) {
 		if(this == o) {
 			return true;
@@ -43,19 +45,23 @@ public class MixedFraction {
 		return false;
 	}
 	
+	//Returns the MixedFraction as a String
 	public String toString() {
 		return whole+"_"+numerator+"/"+denominator;
 	}
 	
+	//Returns the MixedFraction as an array of ints
 	public int[] toArray() {
 		int[] fraction = {whole, numerator, denominator};
 		return fraction;
 	}
 	
+	//Returns a simplified version of this MixedFraction (Re-uses the simplification of the ImproperFraction class)
 	public MixedFraction toSimple() {
 		return this.toImproperFraction().toSimple().toMixedFraction();
 	}
 	
+	//Returns this MixedFraction as an ImproperFraction
 	public ImproperFraction toImproperFraction() {
 		int improperNumerator = whole*denominator+(int)Math.signum(whole)*numerator;
 		return new ImproperFraction(improperNumerator, denominator);
