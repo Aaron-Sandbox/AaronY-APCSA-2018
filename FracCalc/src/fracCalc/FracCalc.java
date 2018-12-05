@@ -62,8 +62,8 @@ public class FracCalc {
 			}
 		}
 		
-		//Gets the first operand and performs all operations one by one to completion
-		ImproperFraction running_total = operands[0];
+	//Gets the first operand and performs all operations one by one to completion
+	ImproperFraction running_total = operands[0];
     	for(int i = 1; i < operands.length; i++){
     		running_total = running_total.operate(operands[i], operators[i-1]);
     	}
@@ -84,8 +84,8 @@ public class FracCalc {
 	
 	//Rounds a double to the nearest integer and returns as type int
 	public static int round2(double num) {
-    	return (int)(num+0.5);
-    }	
+    		return (int)(num+0.5);
+        }	
 	
 	//Checks if a String[] is valid based on an array of allowed characters
 	public static boolean checkValid(String check, char[] regex) {
