@@ -8,6 +8,7 @@ public class MixedFraction {
 		this.whole = whole;
 		
 		if(denominator < 0){
+			
 			this.numerator = -numerator;
 			this.denominator = -denominator;
 		} else {
@@ -15,7 +16,8 @@ public class MixedFraction {
 			this.denominator = denominator;
 		}
 		
-		if(this.numerator < 0){
+		if(this.numerator < 0 && this.whole != 0){
+			
 			this.numerator = -this.numerator;
 			this.whole = -this.whole;
 		}
@@ -55,7 +57,7 @@ public class MixedFraction {
 	}
 	
 	public ImproperFraction toImproperFraction() {
-		int improperNumerator = whole*denominator+(int)Math.signum(numerator)*numerator;
+		int improperNumerator = whole*denominator+(int)Math.signum(whole)*numerator;
 		return new ImproperFraction(improperNumerator, denominator);
 	}
 }
