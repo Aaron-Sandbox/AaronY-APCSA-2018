@@ -7,14 +7,8 @@ public class TextCell implements Cell {
 	@Override
 	public String abbreviatedCellText() {
 		// TODO Auto-generated method stub
-		if(text.length() >= 10) {
-			return text.substring(0, 10);
-		}
-		String addSpaces = text;
-		for(int i = addSpaces.length(); i < 10; i++) {
-			addSpaces += " ";
-		}
-		return addSpaces;
+		String abbrv = text + "          ";
+		return abbrv.substring(0, 10);
 	}
 
 	@Override

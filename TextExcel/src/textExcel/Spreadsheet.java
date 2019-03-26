@@ -25,25 +25,32 @@ public class Spreadsheet implements Grid
 	@Override
 	public String processCommand(String command)
 	{
-		if(command.indexOf('=') != -1) {
-			// If assign cell
+		if(command.indexOf('=') != -1) { // If assign cell
+			
+			Cell cell;
+			
 			String[] split = command.split("=", 2);
-			String cell = split[0];
 			String assignment = split[1];
+			SpreadsheetLocation loc = new SpreadsheetLocation(split[0].replaceAll("\\s+", ""));
+			
+			// If assigning a TextCell
+			if(assignment.indexOf("\"") != -1 && assignment.lastIndexOf("\"") != -1) {
+				cell = new TextCell(assignment.substring(assignment.indexOf("\"")+1, assignment.lastIndexOf("\"")));
 				
-			SpreadsheetLocation loc = new SpreadsheetLocation(cell.replaceAll("\\s+", ""));
-			assignment = assignment.substring(assignment.indexOf("\"")+1, assignment.lastIndexOf("\""));
+			// If assigning a FormulaCell
+			} else if(assignment.indexOf("(") < assignment.indexOf(")")) { 
+				String formula = assignment.substring(assignment.indexOf("(")+1, assignment.lastIndexOf(")"));
+				cell = new FormulaCell(formula.replaceAll("\\s+", ""));
+				
+			// If assigning a PercentCell
+			} else if(assignment.indexOf("%") != -1){ 
+				String percent = Double.parseDouble((assignment.replaceAll("%", "")))/100 + "";
+				cell = new PercentCell(percent);
+				
+			// If assigning a ValueCell
+			} else cell = new ValueCell(assignment.replaceAll("%", ""));
 			
-			TextCell txtcell;
-			if(isAllSpaces(assignment)) {
-				txtcell = new TextCell("");
-			} else {
-				txtcell = new TextCell(assignment);
-			}
-			
-			System.out.println(txtcell.fullCellText());
-			
-			setCell(loc, txtcell);
+			setCell(loc, cell);
 				
 		} else {
 			if(command.toLowerCase().indexOf("clear") != -1) {
@@ -64,29 +71,19 @@ public class Spreadsheet implements Grid
 	}
 
 	@Override
-	public int getRows()
-	{
-		// TODO Auto-generated method stub
+	public int getRows() {
 		return rows;
 	}
-
-	private boolean isAllSpaces(String str) {
-		for(int i = 0; i < str.length(); i++) {
-			if(str.charAt(i) != ' ') return false;
-		}
-		return true;
-	}
+	
 	@Override
 	public int getCols()
 	{
-		// TODO Auto-generated method stub
 		return cols;
 	}
 
 	@Override
 	public Cell getCell(Location loc)
 	{
-		// TODO Auto-generated method stub
 		return cells[loc.getRow()][loc.getCol()];
 	}
 	
