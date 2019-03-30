@@ -1,5 +1,9 @@
 package textExcel;
-
+/*
+ * @author Aaron Yu
+ * @version March 2019
+ * Class to handle empty cells
+ */
 public class EmptyCell implements Cell {
 
 	@Override

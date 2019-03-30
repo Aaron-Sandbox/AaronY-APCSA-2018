@@ -1,4 +1,9 @@
 package textExcel;
+/*
+ * @author Aaron Yu
+ * @version March 2019
+ * Cell that stores a percentage
+ */
 
 public class PercentCell extends RealCell{
 	
@@ -14,15 +19,4 @@ public class PercentCell extends RealCell{
 		return s.substring(0, 10);
 	}
 
-	@Override
-	public String fullCellText() {
-		//Returns the percent as a decimal value
-		return super.getDoubleValue()+"";
-	}
-	
-	@Override
-	public double getDoubleValue() {
-		//Returns the percent as a decimal value (in double form)
-		return super.getDoubleValue();
-	}
 }

@@ -1,5 +1,9 @@
 package textExcel;
-
+/*
+ * @author Aaron Yu
+ * @version March 2019
+ * Client code to run spreadsheet program
+ */
 //import java.io.FileNotFoundException;
 import java.util.Scanner;
 
@@ -7,10 +11,11 @@ import java.util.Scanner;
 
 public class TextExcel
 {
+	public static Spreadsheet spreadsheet;
 
 	public static void main(String[] args)
 	{
-		Spreadsheet spreadsheet = new Spreadsheet();
+		spreadsheet = new Spreadsheet();
 		Scanner sc = new Scanner(System.in);
 		    
 		//Asks for input, continues to ask and print the answer until 'quit' is entered
@@ -21,6 +26,6 @@ public class TextExcel
 		}
 		    	
 		sc.close();
-	
+		
 	}
 }

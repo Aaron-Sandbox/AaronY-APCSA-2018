@@ -1,4 +1,9 @@
 package textExcel;
+/*
+ * @author Aaron Yu
+ * @version March 2019
+ * Class that stores a double value
+ */
 
 public class ValueCell extends RealCell {
 	
@@ -17,15 +22,6 @@ public class ValueCell extends RealCell {
 		// Corrects length after truncation of following zeroes
 		s = s + "          ";
 		return s.substring(0, 10);
-	}
-	
-	@Override
-	public String fullCellText() {
-		return super.fullCellText();
-	}
-	
-	public double getDoubleValue() {
-		return super.getDoubleValue();
 	}
 
 }

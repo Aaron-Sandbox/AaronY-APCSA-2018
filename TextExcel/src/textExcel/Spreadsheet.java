@@ -1,6 +1,9 @@
 package textExcel;
-
-// Update this file with your own code.
+/*
+ * @author Aaron Yu
+ * @version March 2019
+ * Subclass to handle modifying and accessing the spreadsheet
+ */
 
 public class Spreadsheet implements Grid
 {
@@ -30,17 +33,16 @@ public class Spreadsheet implements Grid
 			Cell cell;
 			
 			String[] split = command.split("=", 2);
-			String assignment = split[1];
+			String assignment = split[1].charAt(0) == ' ' ? split[1].replaceFirst(" ", "") : split[1];
 			SpreadsheetLocation loc = new SpreadsheetLocation(split[0].replaceAll("\\s+", ""));
-			
+						
 			// If assigning a TextCell
 			if(assignment.indexOf("\"") != -1 && assignment.lastIndexOf("\"") != -1) {
 				cell = new TextCell(assignment.substring(assignment.indexOf("\"")+1, assignment.lastIndexOf("\"")));
 				
 			// If assigning a FormulaCell
 			} else if(assignment.indexOf("(") < assignment.indexOf(")")) { 
-				String formula = assignment.substring(assignment.indexOf("(")+1, assignment.lastIndexOf(")"));
-				cell = new FormulaCell(formula.replaceAll("\\s+", ""));
+				cell = new FormulaCell(assignment.substring(assignment.indexOf("(")+2, assignment.lastIndexOf(")")-1), this);
 				
 			// If assigning a PercentCell
 			} else if(assignment.indexOf("%") != -1){ 
@@ -48,11 +50,12 @@ public class Spreadsheet implements Grid
 				cell = new PercentCell(percent);
 				
 			// If assigning a ValueCell
-			} else cell = new ValueCell(assignment.replaceAll("%", ""));
+			} else cell = new ValueCell(assignment.replace("%", ""));
 			
 			setCell(loc, cell);
 				
 		} else {
+			if(command.isEmpty()) return "";
 			if(command.toLowerCase().indexOf("clear") != -1) {
 				if(command.equalsIgnoreCase("clear")) {
 					//If clear all

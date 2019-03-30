@@ -1,4 +1,9 @@
 package textExcel;
+/*
+ * @author Aaron Yu
+ * @version March 2019
+ * Class that contains a location in [row][col] form
+ */
 
 //Update this file with your own code.
 

@@ -1,11 +1,16 @@
 package textExcel;
+/*
+ * @author Aaron Yu
+ * @version March 2019
+ * Superclass that stores a double value
+ */
 
 public class RealCell implements Cell {
 	
 	private String value;
 	
 	public RealCell(String value) {
-		this.value = value.replaceAll("\\s+", "");
+		this.value = value;
 	}
 
 	@Override

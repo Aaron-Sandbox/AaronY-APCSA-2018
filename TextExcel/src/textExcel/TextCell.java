@@ -1,4 +1,9 @@
 package textExcel;
+/*
+ * @author Aaron Yu
+ * @version March 2019
+ * Cell that stores text
+ */
 
 public class TextCell implements Cell {
 	
@@ -6,7 +11,6 @@ public class TextCell implements Cell {
 
 	@Override
 	public String abbreviatedCellText() {
-		// TODO Auto-generated method stub
 		String abbrv = text + "          ";
 		return abbrv.substring(0, 10);
 	}
