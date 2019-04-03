@@ -16,4 +16,11 @@ public class EmptyCell implements Cell {
 		return "";
 	}
 
+	@Override
+	public int compareTo(Object o) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+
 }

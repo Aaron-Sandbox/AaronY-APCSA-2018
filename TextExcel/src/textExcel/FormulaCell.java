@@ -41,7 +41,13 @@ public class FormulaCell extends RealCell {
 			// Obtains all cells in the target range
 			SpreadsheetLocation start = new SpreadsheetLocation(range[0]);
 			SpreadsheetLocation end = new SpreadsheetLocation(range[1]);
-			ArrayList<RealCell> rangeArr = rangeBetween(start, end);
+			ArrayList<Cell> cellArr = Spreadsheet.rangeBetween(start, end, s);
+			
+			// Converting cells into RealCells
+			ArrayList<RealCell> rangeArr = new ArrayList<RealCell>();
+			for(Cell c : cellArr) {
+				rangeArr.add((RealCell)c);
+			}
 			
 			// Obtaining total
 			double total = 0;
@@ -52,8 +58,9 @@ public class FormulaCell extends RealCell {
 			// Returns either average or total
 			 return valArr[0].equalsIgnoreCase("AVG") ? total/((double)rangeArr.size()) : total;
 			
+		//Arithmetic formula
 		} else {
-		
+			// Changes all cell references into values, places all values and operators into one array
 			for(int i = 0; i < valArr.length; i++) {
 				if(i%2 == 0) {
 					if(valArr[i].matches("([A-Za-z])[0-9]*")) {
@@ -86,19 +93,4 @@ public class FormulaCell extends RealCell {
 		}
 	}
 	
-	private ArrayList<RealCell> rangeBetween(SpreadsheetLocation a, SpreadsheetLocation b) {
-		ArrayList<RealCell> range = new ArrayList<RealCell>();
-		
-		// Iterates through all the rows and columns within the target range
-		for(int i = a.getRow(); i <= b.getRow(); i++) {
-			for(int j = a.getCol(); j <= b.getCol(); j++) {
-				char col = (char)(j+65); // Converts column number to column letter
-				String str = String.format("%1$s%2$s", Character.toString(col), i+1); // Obtaining string version of cell location
-				range.add((RealCell) s.getCell(new SpreadsheetLocation(str))); // Adds to array of RealCells while typecasting
-			}
-		}
-		
-		return range;
-		
-	}
 }

@@ -1,4 +1,5 @@
 package textExcel;
+import java.util.ArrayList;
 /*
  * @author Aaron Yu
  * @version March 2019
@@ -26,6 +27,13 @@ public class TextExcel
 		}
 		    	
 		sc.close();
+		
+		ArrayList<Cell> range = Spreadsheet.rangeBetween(new SpreadsheetLocation("A9"), new SpreadsheetLocation("B10"), spreadsheet);
+		String s = "";
+		for(Cell c : range) {
+			s += c.fullCellText() + ", ";
+		}
+		System.out.println(s);
 		
 	}
 }
